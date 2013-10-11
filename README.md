@@ -1,4 +1,4 @@
-# lemondcsv
+# lemondcsv v1.0.1
 
 This script converts a native Lemond Revolution Power Pilot CVS
 workout file to a Garmin TCX file. The TCX file can be then imported
@@ -46,7 +46,8 @@ upload.
 ## Contact/Questions/Bugs/Updates etc
 
 If you find a problem with this script, check you have the latest
-version by visiting [github](https://github.com/tpodowd/lemondcsv).
+version by visiting
+[the project on github](https://github.com/tpodowd/lemondcsv).
 If you are using the latest version and have a question/bug etc,
 please file an [issue](https://github.com/tpodowd/lemondcsv/issues)
 if one doesn't already exist and I'll look into it. Sample files
