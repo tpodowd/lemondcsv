@@ -9,7 +9,7 @@ into applications such as Strava or Garmin Connect.
 Currently this script only supports firmware version 63 of the
 Lemond Power Pilot. If you have a lower version, I highly recomend
 installing the latest version which is currently 63 as a lot of
-bugs have been fixed. See [the Lemond Website][http://lemond.myshopify.com/blogs/news/7299932-power-pilot-firmware-updates] for details.
+bugs have been fixed. See [the Lemond Website](http://lemond.myshopify.com/blogs/news/7299932-power-pilot-firmware-updates) for details.
 
 To check your Power Pilot firmware version press and hold HR/KCAL for
 two seconds. The firmware version is shown in the lower right quadrant
@@ -40,3 +40,14 @@ Simply run the script from the shell as follows:
 
     ./lemondcsv.py 09261300.CSV > 09261300.tcx
 
+The TCX file can then be uploaded to Strava etc as a file
+upload.
+
+## Contact/Questions/Bugs/Updates etc
+
+If you find a problem with this script, check you have the latest
+version by visiting [github](https://github.com/tpodowd/lemondcsv).
+If you are using the latest version and have a question/bug etc,
+please file an [issue](https://github.com/tpodowd/lemondcsv/issues)
+if one doesn't already exist and I'll look into it. Sample files
+you are having trouble with are always welcome.

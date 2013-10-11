@@ -22,6 +22,9 @@ into applications such as Strava or Garmin Connect.
 Simply run the program from the shell as follows:
 
     ./lemondcsv.py 09261300.CSV > 09261300.tcx
+
+This is version: v1.0.1. You can always find the latest version of
+this script at: https://github.com/tpodowd/lemondcsv
 """
 
 # Some TODO:
