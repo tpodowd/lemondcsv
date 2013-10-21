@@ -144,10 +144,10 @@ class Revolution:
         self.readCSV(file)
 
     def readCSV(self, file):
-        fp = open(file, 'rb')
+        fp = open(file, 'rt')
         rdr = csv.reader(fp)
-        self.parseDeviceHdr(rdr.next())
-        Point.parsePointHdr(rdr.next())
+        self.parseDeviceHdr(next(rdr))
+        Point.parsePointHdr(next(rdr))
         self.points = []
         for row in rdr:
             p = Point(row)
@@ -230,7 +230,11 @@ class Revolution:
 
     def writeTCX(self):
         tcdb = self.trainingCenterDB()
-        print ElementTree.tostring(tcdb, encoding='UTF-8')
+        et = ElementTree.ElementTree(tcdb)
+        if hasattr(sys.stdout, 'buffer'):
+            et.write(sys.stdout.buffer, 'UTF-8', True)
+        else:
+            et.write(sys.stdout, 'UTF-8', True)
 
     def trainingCenterDB(self):
         dict = {'xsi:schemaLocation': XML_NS + ' ' + XSD,
