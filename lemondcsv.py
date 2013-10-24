@@ -77,7 +77,7 @@ class Point:
         return (t.tm_hour * 3600) + (t.tm_min * 60) + t.tm_sec
 
     def __str__(self):
-        return "%d %f %d" % (self.secs, self.speed, self.power)
+        return "%d %f %f %d" % (self.secs, self.speed, self.dist, self.power)
 
     def trackpointElement(self, start):
         tp = Element('Trackpoint')
@@ -141,6 +141,7 @@ class Revolution:
         self.ttlCadence = 0
         self.ttlWatts = 0
         self.ttlDist = 0     # meters
+        self.errors = 0
         self.readCSV(file)
 
     def readCSV(self, file):
@@ -148,12 +149,32 @@ class Revolution:
         rdr = csv.reader(fp)
         self.parseDeviceHdr(next(rdr))
         Point.parsePointHdr(next(rdr))
+        prow = []
+        distance = 0
         self.points = []
         for row in rdr:
             p = Point(row)
-            self.points.append(p)
-            self.collectStats(p)
-            self.fixDistance(p)
+            distinc = p.dist - distance
+            if distinc < 0:
+                # Distance has gone backwards. This is a bad sign
+                # and indicates data trouble. We must threat this
+                # point suspiciously. TODO - salvage data?
+                sys.stderr.write("Bad data point:\n%s\n%s\n" % (prow, row))
+                err = "Distance lost %f km in 1s. Battery ok?" % (distinc * -1)
+                raise Exception("Corrupt file. %s" % err)
+            elif distinc > 0.2:
+                # Distance gone bonkers. Not possible to travel 200m
+                # in 1 second! We must threat this # point suspiciously.
+                # TODO - salvage data?
+                sys.stderr.write("Bad data point:\n%s\n%s\n" % (prow, row))
+                err = "Distance gained %f km in 1s. Battery ok?" % distinc
+                raise Exception("Corrupt file. %s" % err)
+            else:
+                prow = row
+                distance = p.dist
+                self.points.append(p)
+                self.collectStats(p)
+                self.fixDistance(p)
 
     def fixDistance(self, p):
         # Current version of lemond uses km to 1 decimal place for
