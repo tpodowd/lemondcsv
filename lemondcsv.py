@@ -41,9 +41,11 @@ this script at: https://github.com/tpodowd/lemondcsv
 #    file. If you have a session with multiple files, please send them
 #    to me so that I can adjust the script to work with it.
 
+import os
 import sys
 import csv
 import time
+import getopt
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement
 
@@ -228,13 +230,14 @@ class Revolution:
     def metersPerSec(speed):
         return speed / 3.6
 
-    def writeTCX(self):
+    def writeTCX(self, file):
         tcdb = self.trainingCenterDB()
         et = ElementTree.ElementTree(tcdb)
-        if hasattr(sys.stdout, 'buffer'):
-            et.write(sys.stdout.buffer, 'UTF-8', True)
-        else:
-            et.write(sys.stdout, 'UTF-8', True)
+        try:
+            et.write(file, 'UTF-8', True)
+        except TypeError:
+            # pre-python 2.7
+            et.write(file, 'UTF-8')
 
     def trainingCenterDB(self):
         dict = {'xsi:schemaLocation': XML_NS + ' ' + XSD,
@@ -334,9 +337,48 @@ class Revolution:
             t.append(p.trackpointElement(self.startsec))
         return t
 
-if len(sys.argv) != 2:
-    sys.stderr.write("Usage: %s workout.csv > workout.tcx\n" % sys.argv[0])
+
+def output_name(iname):
+    # validate name ends with .CSV
+    if iname.lower().endswith(".csv"):
+        prefix = iname[:-3]
+        oname = prefix + "tcx"
+        if not os.path.exists(oname):
+            return oname
+        else:
+            raise Exception("File %s already exists. Cannot continue." % oname)
+    else:
+        raise Exception("%s does not end with .csv" % iname)
+
+
+def usage_exit():
+    sys.stderr.write("Usage: lemondcsv.py [-f file.tcx] workout.csv\n")
     sys.exit(1)
+
+opts, args = getopt.getopt(sys.argv[1:], 'f:h')
+oname = None
+for opt, arg in opts:
+    if opt == '-f':
+        oname = arg
+    elif opt == '-h':
+        usage_exit()
+
+if len(args) != 1:
+    # TODO: support multiple CSV files to join them up to one TCX.
+    usage_exit()
 else:
-    revo = Revolution(sys.argv[1])
-    revo.writeTCX()
+    iname = args[0]
+    if oname is None:
+        oname = output_name(iname)
+    revo = Revolution(iname)
+    if oname == '-':
+        if hasattr(sys.stdout, 'buffer'):
+            ofile = sys.stdout.buffer
+        else:
+            ofile = sys.stdout
+    else:
+        sys.stderr.write("Writing to: %s\n" % oname)
+        ofile = open(oname, "wb")
+    revo.writeTCX(ofile)
+    if oname != '-':
+        ofile.close()

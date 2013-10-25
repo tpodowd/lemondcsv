@@ -1,4 +1,4 @@
-# lemondcsv v1.0.1
+# lemondcsv v1.1.0
 
 This script converts a native Lemond Revolution Power Pilot CVS
 workout file to a Garmin TCX file. The TCX file can be then imported
@@ -21,8 +21,8 @@ script if possible.
 
 ## Strava and Speed
 
-This version of the script includes a fix for Strava so that it
-correctly shows distance and speed.
+This script converts the data in such a way that Strava can
+correctly show speed.
 
 ## Merging Multiple CSV files to one TCX workout
 
@@ -34,14 +34,35 @@ group of CSV files into one TCX workout. If you have a workout
 session (on firmware 63) with multiple files, please send them
 to me so that I can adjust the script to work with it.
 
-## Running the Script
+## Running the lemondcsv.py
 
-Simply run the script from the shell as follows:
+The script can be run in a number of ways. Here are some examples.
 
-    ./lemondcsv.py 09261300.CSV > 09261300.tcx
+The simpliest way is to pass a single workout argument. This will take
+convert the given CSV filename to a *TCX* filename of a similar name.
+Note that if the TCX file already exists, the script will not overwrite it.
 
-The TCX file can then be uploaded to Strava etc as a file
-upload.
+    ./lemondcsv.py 09261300.CSV
+
+Another way is to specify a filename to use as the *TCX* filename. You
+can do this by using the '-f' argument. Note that when you use -f, the
+script will overwrite the target file if it exists as it presumes you
+know what you want to do.
+
+    ./lemondcsv.py -f 09261300.tcx 09261300.CSV
+
+If you would like to output the TCX to stdout for some fancy processing
+then you can always use the '-f' argument with the '-' option.
+
+    ./lemondcsv.py -f - 09261300.CSV | xmllint --format - > 09261300.tcx
+
+Once you have generated your TCX file, you can directly upload the file
+to Strava and analyze your workout there.
+
+## Python Version Support
+
+This script has been tested on Python 2.6, 2.7, 3.2 and 3.3. It will not
+work on Python 2.5 or earlier.
 
 ## Contact/Questions/Bugs/Updates etc
 
