@@ -21,9 +21,12 @@ into applications such as Strava or Garmin Connect.
 
 Simply run the program from the shell as follows:
 
-    ./lemondcsv.py 09261300.CSV > 09261300.tcx
+    ./lemondcsv.py 09261300.CSV
 
-This is version: v1.0.1. You can always find the latest version of
+This will create a new file of the same name but with a TCX extension
+in the same directory as the CSV file, ie 09261300.tcx.
+
+This is version: v1.1.1. You can always find the latest version of
 this script at: https://github.com/tpodowd/lemondcsv
 """
 
@@ -352,7 +355,7 @@ def output_name(iname):
 
 
 def usage_exit():
-    sys.stderr.write("Usage: lemondcsv.py [-f file.tcx] workout.csv\n")
+    sys.stderr.write("Usage: lemondcsv.py [-f workout.tcx] workout.csv\n")
     sys.exit(1)
 
 opts, args = getopt.getopt(sys.argv[1:], 'f:h')
